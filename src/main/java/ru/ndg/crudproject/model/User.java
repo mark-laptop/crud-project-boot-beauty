@@ -16,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -34,6 +36,8 @@ public class User {
     @Column(name = "id")
     private Long id;
 
+    @NotNull
+    @NotEmpty
     @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 

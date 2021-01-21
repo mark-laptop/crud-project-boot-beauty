@@ -68,8 +68,10 @@ public class UserController {
     }
 
     @PostMapping(value = "/admin/update")
-    public String updateUser(@Valid @ModelAttribute User user, BindingResult bindingResult) {
+    public String updateUser(@Valid @ModelAttribute User user, BindingResult bindingResult, Principal principal, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("user_auth", getAuthenticationUser(principal));
+            model.addAttribute("roles", roleService.getAllRoles());
             return "update_user";
         }
         userService.updateUser(user);
@@ -77,9 +79,11 @@ public class UserController {
     }
 
     @PostMapping(value = "/admin/create")
-    public String createUser(@Valid @ModelAttribute User user, BindingResult bindingResult) {
+    public String createUser(@Valid @ModelAttribute User user, BindingResult bindingResult, Principal principal, Model model) {
         // TODO: 21.01.2021 Не работает сука
         if (bindingResult.hasErrors()) {
+            model.addAttribute("user_auth", getAuthenticationUser(principal));
+            model.addAttribute("roles", roleService.getAllRoles());
             return "create_user";
         }
         userService.saveUser(user);
