@@ -18,7 +18,14 @@ public class RoleConverter implements Converter<String, Role> {
     }
 
     @Override
-    public Role convert(String id) {
-        return roleService.getRoleById(Long.parseLong(id));
+    public Role convert(String value) {
+        if (value.startsWith("ROLE_")) {
+            return roleService.getRoleByName(value);
+        }
+        try {
+            return roleService.getRoleById(Long.parseLong(value));
+        } catch (NumberFormatException e) {
+            throw new UnsupportedOperationException(String.format("Can't convert Role by value: %s", value), e);
+        }
     }
 }
