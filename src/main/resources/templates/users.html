@@ -18,16 +18,20 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
+                        <label hidden for="user_id" class="col-form-label">ID:</label>
+                        <input hidden type="text" class="form-control" id="user_id" name="user_id">
+                    </div>
+                    <div class="form-group">
                         <label for="nickname" class="col-form-label">Nickname:</label>
                         <input type="text" class="form-control" id="nickname" name="nickname">
                     </div>
                     <div class="form-group">
-                        <label for="firstname" class="col-form-label">First name:</label>
-                        <input type="text" class="form-control" id="firstname" name="firstname">
+                        <label for="first_name" class="col-form-label">First name:</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name">
                     </div>
                     <div class="form-group">
-                        <label for="lastname" class="col-form-label">Last name:</label>
-                        <input type="text" class="form-control" id="lastname" name="lastname">
+                        <label for="last_name" class="col-form-label">Last name:</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name">
                     </div>
                     <div class="form-group">
                         <label for="age" class="col-form-label">Age:</label>
@@ -40,6 +44,14 @@
                     <div class="form-group">
                         <label for="password" class="col-form-label">Password:</label>
                         <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="role" class="col-form-label">Roles:</label>
+                        <select multiple class="form-control" id="role" required>
+                            <option th:each="role : ${roles}"
+                                    th:text="${role.name.replaceFirst('ROLE_', '')}"
+                                    th:value="${role.id}"></option>
+                        </select>
                     </div>
                 </form>
             </div>
@@ -56,20 +68,7 @@
 <div class="container-fluid">
     <div class="row ">
 
-        <div class="col-2">
-            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
-                   aria-controls="v-pills-home" aria-selected="true">Home</a>
-<!--                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"-->
-<!--                   aria-controls="v-pills-home" aria-selected="true">Home</a>-->
-<!--                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab"-->
-<!--                   aria-controls="v-pills-profile" aria-selected="false">Profile</a>-->
-<!--                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab"-->
-<!--                   aria-controls="v-pills-messages" aria-selected="false">Messages</a>-->
-<!--                <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab"-->
-<!--                   aria-controls="v-pills-settings" aria-selected="false">Settings</a>-->
-            </div>
-        </div>
+        <div th:replace="fragments/sidebar.html :: sidebar"></div>
 
         <div class="col-8">
             <h1>Admin panel</h1>
@@ -111,11 +110,12 @@
                         </span>
                     </td>
                     <td>
-                        <a class="btn btn-info" th:href="@{/admin/{id}(id = ${user.id})}"
+                        <a class="btn btn-info"
                            data-toggle="modal" data-target="#exampleModal"
+                           th:data-user_id="${user.id}"
                            th:data-nickname="${user.nickname}"
-                           th:data-firstName="${user.firstName}"
-                           th:data-lastName="${user.lastName}"
+                           th:data-first_name="${user.firstName}"
+                           th:data-last_name="${user.lastName}"
                            th:data-age="${user.age}"
                            th:data-email="${user.email}">Edit</a>
                     </td>
@@ -144,18 +144,20 @@
 <script>
     $('#exampleModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget) // Button that triggered the modal
+        var user_id = button.data('user_id') // Extract info from data-* attributes
         var nickname = button.data('nickname') // Extract info from data-* attributes
-        var firstName = button.data('firstName') // Extract info from data-* attributes
-        var lastName = button.data('lastName') // Extract info from data-* attributes
+        var first_name = button.data('first_name') // Extract info from data-* attributes
+        var last_name = button.data('last_name') // Extract info from data-* attributes
         var age = button.data('age') // Extract info from data-* attributes
         var email = button.data('email') // Extract info from data-* attributes
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         var modal = $(this)
         modal.find('.modal-title').text('Edit user')
+        modal.find('#user_id').val(user_id)
         modal.find('#nickname').val(nickname)
-        modal.find('#firstname').val(firstName)
-        modal.find('#lastname').val(lastName)
+        modal.find('#first_name').val(first_name)
+        modal.find('#last_name').val(last_name)
         modal.find('#age').val(age)
         modal.find('#email').val(email)
     })

@@ -41,6 +41,7 @@ public class UserController {
     public String showAllUserPage(Model model, Principal principal) {
         model.addAttribute("user_auth", getAuthenticationUser(principal));
         model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("roles", roleService.getAllRoles());
         return "users";
     }
 
