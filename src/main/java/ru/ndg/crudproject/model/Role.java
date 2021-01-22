@@ -41,12 +41,11 @@ public class Role {
 
         Role that = (Role) o;
 
-        if (!Objects.equals(this.id, that.id)) return false;
         return Objects.equals(this.name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.name);
+        return Objects.hash(this.name);
     }
 }
