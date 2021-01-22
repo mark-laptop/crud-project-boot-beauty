@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import ru.ndg.crudproject.model.Role;
 import ru.ndg.crudproject.service.role.RoleService;
 
-// TODO: 21.01.2021 Должен мапить Role без конвертера, обычно работало само. Теперь сука не хочет
 @Component
 public class RoleConverter implements Converter<String, Role> {
 
