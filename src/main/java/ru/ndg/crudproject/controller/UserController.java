@@ -1,8 +1,6 @@
 package ru.ndg.crudproject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.ndg.crudproject.dto.AuthenticationUser;
 import ru.ndg.crudproject.model.User;
 import ru.ndg.crudproject.service.role.RoleService;
 import ru.ndg.crudproject.service.user.UserService;
@@ -39,7 +36,7 @@ public class UserController {
 
     @GetMapping(value = "/admin")
     public String showAllUserPage(Model model, Principal principal) {
-        model.addAttribute("user_auth", getAuthenticationUser(principal));
+        model.addAttribute("user_auth", principal);
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", roleService.getAllRoles());
         return "users";
@@ -47,34 +44,21 @@ public class UserController {
 
     @GetMapping(value = "/user")
     public String showUserPage(Model model, Principal principal) {
-        model.addAttribute("user_auth", getAuthenticationUser(principal));
+        model.addAttribute("user_auth", principal);
         model.addAttribute("user", userService.getUserByUsername(principal.getName()));
         return "user";
     }
 
-    @GetMapping(value = "/admin/{id}")
-    public String showUpdateUserPage(Model model, @PathVariable(name = "id") Long id, Principal principal) {
-        model.addAttribute("user_auth", getAuthenticationUser(principal));
-        model.addAttribute("roles", roleService.getAllRoles());
-        model.addAttribute("user", userService.getUserById(id));
-        return "update_user";
-    }
-
     @GetMapping(value = "/admin/create")
     public String showCreateUserPage(Model model, Principal principal) {
-        model.addAttribute("user_auth", getAuthenticationUser(principal));
+        model.addAttribute("user_auth", principal);
         model.addAttribute("roles", roleService.getAllRoles());
         model.addAttribute("user", new User());
         return "create_user";
     }
 
     @PostMapping(value = "/admin/update")
-    public String updateUser(@Valid @ModelAttribute User user, BindingResult bindingResult, Principal principal, Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("user_auth", getAuthenticationUser(principal));
-            model.addAttribute("roles", roleService.getAllRoles());
-            return "update_user";
-        }
+    public String updateUser(@Valid @ModelAttribute User user, Principal principal, Model model) {
         userService.updateUser(user);
         return "redirect:/admin";
     }
@@ -82,7 +66,7 @@ public class UserController {
     @PostMapping(value = "/admin/create")
     public String createUser(@Valid @ModelAttribute User user, BindingResult bindingResult, Principal principal, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user_auth", getAuthenticationUser(principal));
+            model.addAttribute("user_auth", principal);
             model.addAttribute("roles", roleService.getAllRoles());
             return "create_user";
         }
@@ -97,8 +81,4 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    private AuthenticationUser getAuthenticationUser(Principal principal) {
-        return new AuthenticationUser(principal.getName(),
-                AuthorityUtils.authorityListToSet(((Authentication) principal).getAuthorities()));
-    }
 }

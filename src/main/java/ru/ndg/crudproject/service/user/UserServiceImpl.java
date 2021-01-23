@@ -26,13 +26,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
     private final RoleDao roleDao;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
         this.userDao = userDao;
         this.roleDao = roleDao;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -50,17 +48,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User saveUser(User user) {
-        Optional<Role> optionalRole = Optional.ofNullable(roleDao.getRoleByName(Roles.ROLE_USER.toString()));
-        Role role = optionalRole.orElseThrow(() -> new RoleNotFoundException("Not found role by name: " + Roles.ROLE_USER));
-        user.getRoles().add(role);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userDao.saveUser(user);
     }
 
     @Transactional
     @Override
     public User updateUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User updateUser = userDao.updateUser(user);
         SecurityUtil.refreshRolesForAuthenticatedUser(updateUser);
         return updateUser;

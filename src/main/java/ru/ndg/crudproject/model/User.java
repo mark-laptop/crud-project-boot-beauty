@@ -1,5 +1,6 @@
 package ru.ndg.crudproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,8 +37,6 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @NotNull
-    @NotEmpty
     @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 
@@ -56,6 +55,7 @@ public class User {
     @Column(name = "age")
     private Byte age;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),

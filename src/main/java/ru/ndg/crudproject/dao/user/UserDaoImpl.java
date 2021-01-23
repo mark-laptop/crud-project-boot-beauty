@@ -1,5 +1,8 @@
 package ru.ndg.crudproject.dao.user;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ru.ndg.crudproject.model.User;
 
@@ -13,6 +16,12 @@ public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
     private EntityManager entityManager;
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserDaoImpl(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public List<User> getAllUsers() {
@@ -26,6 +35,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User saveUser(User user) {
+        passwordEncoder.encode(user.getPassword());
         entityManager.persist(user);
         return user;
     }
@@ -33,8 +43,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User updateUser(User user) {
         User userFromDB = entityManager.find(User.class, user.getId());
-        userFromDB.setRoles(user.getRoles());
-        return entityManager.merge(user);
+        BeanUtils.copyProperties(user, userFromDB, "password");
+        if (!user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userFromDB.setPassword(user.getPassword());
+        }
+//        userFromDB.setRoles(user.getRoles());
+        return entityManager.merge(userFromDB);
     }
 
     @Override
