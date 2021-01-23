@@ -1,93 +1,103 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="fragments/header.html :: head"></head>
-
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <head th:replace="fragments/header.html :: head"></head>
+</head>
 <body>
 
 <nav th:replace="fragments/header.html :: nav"></nav>
-<br>
-<div class="container-fluid">
-    <div class="row ">
 
+
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <br>
         <div th:replace="fragments/sidebar.html :: sidebarAdmin"></div>
-
-        <div class="col-8">
-
-            <h1>Admin panel</h1>
-
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/admin}">User table</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/admin/create}">New user</a>
-                </li>
-            </ul>
-
-            <h4>Add new user</h4>
-
-            <div class="row justify-content-center">
-                <div class="col-md-5">
-                    <div th:action="@{/admin/create}" th:method="post" th:object="${user}">
-                        <div class="form-row align-items-center">
-                            <div class="col">
-                                <div class="col-auto">
-                                    <label for="nickname">Nickname</label>
-                                    <input type="text" class="form-control mb-2" id="nickname" th:field="*{nickname}"
-                                           placeholder="Nickname">
+        <div class="col-10 bg-light">
+            <div class="container-fluid">
+                <div class="raw">
+                    <div class="col mt-3">
+                        <h1>Admin panel</h1>
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link" id="home-tab" th:href="@{/admin}" role="tab" aria-controls="home" aria-selected="true">Users table</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" id="profile-tab" data-toggle="tab" th:href="@{/admin/create}" role="tab" aria-controls="profile" aria-selected="false">New User</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            </div>
+                            <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="col border border-bottom-0 bg-light p-2">
+                                    <h4 class="mb-0">Add new user</h4>
                                 </div>
-                                <div class="col-auto">
-                                    <label for="firstName">First name</label>
-                                    <input type="text" class="form-control mb-2" id="firstName" th:field="*{firstName}"
-                                           placeholder="First name">
-                                </div>
-                                <div class="col-auto">
-                                    <label for="lastName">Last name</label>
-                                    <input type="text" class="form-control mb-2" id="lastName" th:field="*{lastName}"
-                                           placeholder="Last name">
-                                </div>
-                                <div class="col-auto">
-                                    <label for="age">Age</label>
-                                    <input type="number" class="form-control mb-2" id="age" th:field="*{age}"
-                                           placeholder="Age">
-                                </div>
-                                <div class="col-auto">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control mb-2" id="email" th:field="*{email}"
-                                           placeholder="Email">
-                                </div>
-                                <div class="col-auto">
-                                    <label for="password">Password</label>
-                                    <input type="password" class="form-control mb-2" id="password"
-                                           th:field="*{password}"
-                                           placeholder="Password">
-                                </div>
-                                <div class="col-auto">
-                                    <label for="role">Role</label>
-                                    <select multiple class="form-control" id="role" th:field="*{roles}" required>
-                                        <option th:each="role : ${roles}"
-                                                th:text="${role.name.replaceFirst('ROLE_', '')}"
-                                                th:value="${role.id}"></option>
-                                    </select>
-                                </div>
-                                <br>
-                                <div class="row justify-content-md-center">
-                                    <div class="col-auto">
-                                        <button type="submit" class="btn btn-success">Add new user</button>
+                                <div class="w-100"></div>
+                                <div class="col p-3 border bg-white text-dark">
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-md-5">
+                                            <form th:method="POST" th:action="@{/admin/users}" th:object="${user}" class="text-center">
+                                                <div class="col">
+                                                    <div class="col-auto">
+                                                        <label for="nickname">Nickname</label>
+                                                        <input type="text" class="form-control mb-2" id="nickname" th:field="*{nickname}"
+                                                               placeholder="Nickname">
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <label for="firstName">First Name</label>
+                                                        <input type="text" class="form-control mb-2" id="firstName" th:field="*{firstName}"
+                                                               placeholder="First Name">
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <label for="lastName">Last Name</label>
+                                                        <input type="text" class="form-control mb-2" id="lastName" th:field="*{lastName}"
+                                                               placeholder="Last Name">
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <label for="age">Age</label>
+                                                        <input type="number" class="form-control mb-2" id="age" th:field="*{age}"
+                                                               placeholder="Age">
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <label for="email">Email</label>
+                                                        <input type="email" class="form-control mb-2" id="email" th:field="*{email}"
+                                                               placeholder="Mail">
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <label for="password">Password</label>
+                                                        <input type="password" class="form-control mb-2" id="password"
+                                                               th:field="*{password}"
+                                                               placeholder="Password">
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <label for="role">Role</label>
+                                                        <select multiple class="form-control" id="role" th:field="*{roles}" required>
+                                                            <option th:each="role : ${roles}"
+                                                                    th:text="${role.name.replaceFirst('ROLE_', '')}"
+                                                                    th:value="${role.id}"></option>
+                                                        </select>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row justify-content-md-center">
+                                                        <div class="col-auto">
+                                                            <button type="submit" class="btn btn-success">Add new user</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    </form>
                 </div>
             </div>
         </div>
-
     </div>
-
-    <script th:replace="fragments/footer.html :: scripts"/>
-
+</div>
+<script th:replace="fragments/footer.html :: scripts"></script>
 </body>
 </html>
