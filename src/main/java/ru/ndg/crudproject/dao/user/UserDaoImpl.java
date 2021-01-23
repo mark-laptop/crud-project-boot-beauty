@@ -48,7 +48,6 @@ public class UserDaoImpl implements UserDao {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userFromDB.setPassword(user.getPassword());
         }
-//        userFromDB.setRoles(user.getRoles());
         return entityManager.merge(userFromDB);
     }
 

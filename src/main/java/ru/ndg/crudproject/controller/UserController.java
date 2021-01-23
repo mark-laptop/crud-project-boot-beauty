@@ -74,7 +74,6 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    // TODO: 21.01.2021 Если удалили пользователя, выкидываем его
     @GetMapping(value = "/admin/delete/{id}")
     public String deleteUser(@PathVariable(name = "id") Long id) {
         userService.deleteUser(id);
